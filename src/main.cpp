@@ -1,9 +1,8 @@
 #include <Arduino.h>
-
-// put function declarations here:
-int myFunction(int, int);
+#include <Application.h>
 
 #define LED 2
+
 
 void setup() {
   // put your setup code here, to run once:

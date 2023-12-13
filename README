@@ -1,0 +1,44 @@
+# Projet de Domotique - Maison Connectée
+
+Ce projet a été réalisé dans le cadre de nos cours de C++ avec pour objectif la création d'une maquette de maison connectée à l'aide d'un ESP8266 programmé en C++.
+
+## Description du Projet
+
+Notre équipe a choisi de concevoir un module connecté compatible avec Alexa pour la gestion automatisée d'une maison. Ce module offre des fonctionnalités telles que l'allumage des lumières, l'ouverture des volets roulants en fonction de plusieurs paramètres tels que la luminosité ambiante de la pièce, l'heure actuelle et les conditions météorologiques.
+
+## Fonctionnalités Principales
+
+- **Contrôle de la Lumière:** L'ESP8266 est configuré pour allumer/éteindre les lumières de manière automatique ou à la demande via des commandes vocales avec Alexa.
+- **Gestion des Volets Roulants:** En se basant sur des capteurs de luminosité, l'heure du jour et les données météorologiques, le système peut ouvrir ou fermer les volets roulants pour maintenir un équilibre entre la lumière naturelle et artificielle.
+- **Intégration avec Alexa:** L'interaction avec Alexa permet un contrôle vocal simple et efficace de tous les dispositifs connectés dans la maison.
+
+## Configuration Requise
+
+- **Matériel:** ESP8266, capteurs de luminosité, relais pour le contrôle des lumières et des volets roulants.
+- **Logiciels:** Arduino IDE pour la programmation de l'ESP8266 en langage C++.
+- **Accès Internet:** Nécessaire pour récupérer les données météorologiques.
+
+## Configuration du Projet
+
+1. Cloner ce dépôt : `git clone https://github.com/VotreNom/ProjetDomotique`
+2. Ouvrir le projet dans Arduino IDE.
+3. Configurer les paramètres du réseau Wi-Fi et les identifiants pour l'accès à l'API d'Alexa.
+4. Téléverser le code sur l'ESP8266.
+
+## Utilisation
+
+1. Assurez-vous que l'ESP8266 est connecté au réseau Wi-Fi domestique.
+2. Dites "Alexa, découvre les nouveaux appareils" pour permettre à Alexa de détecter le module.
+3. Utilisez des commandes vocales préétablies pour contrôler les lumières et les volets roulants.
+
+## Contributions
+
+Les contributions au projet sont les bienvenues ! Si vous souhaitez contribuer, veuillez soumettre une Pull Request détaillant les modifications apportées.
+
+## Auteurs
+
+Ce projet a été réalisé par Sanchez Manon et Clément Gauché dans le cadre de nos cours de C++.
+
+## Remerciements
+
+Nous remercions nos enseignants pour leur soutien et leurs conseils précieux tout au long du développement de ce projet.
