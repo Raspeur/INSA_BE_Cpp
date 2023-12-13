@@ -1,5 +1,6 @@
 #include <iostream>
 #include <ESP8266WiFi.h>
+#include <Espalexa.h>
 using namespace std;
 // prototypes
 boolean connectWifi();
