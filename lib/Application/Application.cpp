@@ -1,12 +1,8 @@
 #include <iostream>
-#include <ESP8266WiFi.h>
 using namespace std;
 // prototypes
-boolean connectWifi();
 
-// Change this!!
-const char* ssid = "Redmi Note 10 Pro";
-const char* password = "totototo";
+
 
 class DispositifDomotique {
 public:
@@ -45,7 +41,7 @@ public:
         } else if (commande == "éteins la lumière") {
             eteindre();
         } else {
-            throw invalid_argument("Commande vocale non reconnue pour la lumière.");
+            cout << "Commande vocale non reconnue pour la lumière." << endl;
         }
     }
 };
