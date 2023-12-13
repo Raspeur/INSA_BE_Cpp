@@ -1,8 +1,8 @@
 #include <iostream>
+#include <Arduino.h>
+
 using namespace std;
 // prototypes
-
-
 
 class DispositifDomotique {
 public:
@@ -32,8 +32,25 @@ protected:
 };
 
 class Lumiere : public DispositifDomotique {
+private:
+    int pinLed;
 public:
     Lumiere(const string& nom) : DispositifDomotique(nom) {}
+
+    virtual void allumer()
+    {
+        digitalWrite(pinLed, 1);
+    }
+    virtual void eteindre()
+    {
+        digitalWrite(pinLed, 0);
+    }
+
+    void setPinLed(int pin)
+    {
+        pinLed = pin;
+        pinMode(pin, OUTPUT);
+    }
 
     void traiterCommandeVocale(const string& commande) {
         if (commande == "allume la lumière") {
@@ -41,7 +58,15 @@ public:
         } else if (commande == "éteins la lumière") {
             eteindre();
         } else {
-            cout << "Commande vocale non reconnue pour la lumière." << endl;
+            cout << "Commande vocale non compatible pour la lumière." << endl;
         }
+    }
+
+    void CommandeManuelle(bool etat_led)
+    {
+        if(etat_led)
+            allumer();
+        else
+            eteindre();
     }
 };

@@ -2,6 +2,7 @@
 #include <Application.h>
 #include <Espalexa.h>
 #include <ESP8266WiFi.h>
+
 #define LED 2
 
 Lumiere myLED("led");
@@ -15,8 +16,7 @@ const char* password = "totototo";
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  pinMode(LED, OUTPUT);
-
+  myLED.setPinLed(LED);
   // Initialise wifi connection
   wifiConnected = connectWifi();
 }
@@ -27,10 +27,10 @@ void loop() {
   {
     Serial.println("LED is on");
   }
-  digitalWrite(LED, HIGH);
+  myLED.allumer();
   Serial.println("LED is on");
   delay(1000);
-  digitalWrite(LED, LOW);
+  myLED.eteindre();
   Serial.println("LED is off");
   delay(1000);
 }
