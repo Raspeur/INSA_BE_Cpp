@@ -3,15 +3,23 @@
 #include <Espalexa.h>
 #include <ESP8266WiFi.h>
 
+
 #define LED 2
 
-Lumiere myLED("led");
+Lumiere myLED("led", LED);
+
 bool wifiConnected = false;
 bool connectWifi();
+Espalexa espalexa;
+EspalexaDevice* device;
 
 // Change this!!
 const char* ssid = "Redmi Note 10 Pro";
 const char* password = "totototo";
+
+
+
+void firstLightChanged(uint8_t brightness);
 
 void setup() {
   // put your setup code here, to run once:
@@ -19,20 +27,33 @@ void setup() {
   myLED.setPinLed(LED);
   // Initialise wifi connection
   wifiConnected = connectWifi();
+
+  if(wifiConnected){
+    // Define your devices here. 
+    device = new EspalexaDevice("Lampe 1", firstLightChanged); 
+    espalexa.addDevice(device); //simplest definition, default state off
+
+    espalexa.begin();
+    
+  } else
+  {
+    while (1) {
+      cout <<"Cannot connect to WiFi. Please check data and reset the ESP.";
+      delay(2500);
+    }
+  }
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  if (wifiConnected)
-  {
-    Serial.println("LED is on");
-  }
-  myLED.allumer();
-  Serial.println("LED is on");
-  delay(1000);
-  myLED.eteindre();
-  Serial.println("LED is off");
-  delay(1000);
+  espalexa.loop();
+  delay(1);
+}
+
+void firstLightChanged(uint8_t brightness)
+{
+  Serial.println(brightness);
+  //Control the device
+  myLED.CommandeManuelle(brightness);
 }
 
 boolean connectWifi(){

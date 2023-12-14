@@ -6,7 +6,7 @@ using namespace std;
 
 class DispositifDomotique {
 public:
-    DispositifDomotique(const string& _nom) : nom(_nom), allume(false) {}
+        DispositifDomotique(const string& _nom) : nom(_nom), allume(false) {}
 
     virtual void allumer() {
         cout << nom.c_str();
@@ -24,47 +24,42 @@ public:
         return allume;
     }
 
-    virtual void traiterCommandeVocale(const string& commande) = 0;
+    //virtual void traiterCommandeVocale(const string& commande) = 0;
 
 protected:
-    string nom;
+string nom;
     bool allume;
 };
 
-class Lumiere : public DispositifDomotique {
+class Lumiere : public DispositifDomotique{
 private:
     int pinLed;
 public:
-    Lumiere(const string& nom) : DispositifDomotique(nom) {}
+    Lumiere(const string& nom, int pin) : DispositifDomotique(nom)
+    {
+        
+    }
 
     virtual void allumer()
     {
-        digitalWrite(pinLed, 1);
+        digitalWrite(pinLed, (!true));
+        allume = true;
     }
     virtual void eteindre()
     {
-        digitalWrite(pinLed, 0);
+        digitalWrite(pinLed, (!false));
+        allume = false;
     }
 
     void setPinLed(int pin)
     {
         pinLed = pin;
-        pinMode(pin, OUTPUT);
+        pinMode(pinLed, OUTPUT);
     }
 
-    void traiterCommandeVocale(const string& commande) {
-        if (commande == "allume la lumière") {
-            allumer();
-        } else if (commande == "éteins la lumière") {
-            eteindre();
-        } else {
-            cout << "Commande vocale non compatible pour la lumière." << endl;
-        }
-    }
-
-    void CommandeManuelle(bool etat_led)
+    void CommandeManuelle(uint8_t etat_led)
     {
-        if(etat_led)
+        if(etat_led!=0)
             allumer();
         else
             eteindre();
