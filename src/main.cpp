@@ -6,7 +6,8 @@
 
 #define LED 2
 
-Lumiere myLED("led", LED);
+Single_Led myLED("led", LED);
+Ch_LED_RGB RGBLed("LedRGB1", D7, D8);
 
 bool wifiConnected = false;
 bool connectWifi();
@@ -19,20 +20,32 @@ const char* password = "totototo";
 
 
 
-void firstLightChanged(uint8_t brightness);
+void RGB_Led_Set(uint8_t brightness, uint32_t rgb)
+{
+  Serial.println(brightness);
+  Serial.println(rgb);
+  RGBLed.setRGB((rgb >> 16) & 0xFF, rgb & 0xFF, (rgb >> 8) & 0xFF);
+  RGBLed.CommandeAlexa(brightness);
+}
+void Single_Led_Set(uint8_t brightness)
+{
+  //Control the device
+  Serial.println(brightness);
+  myLED.CommandeAlexa(brightness);
+}
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  myLED.setPinLed(LED);
   // Initialise wifi connection
   wifiConnected = connectWifi();
 
+
+
   if(wifiConnected){
     // Define your devices here. 
-    device = new EspalexaDevice("Lampe 1", firstLightChanged); 
-    espalexa.addDevice(device); //simplest definition, default state off
-
+    device = new EspalexaDevice("Lampe 1", Single_Led_Set); espalexa.addDevice(device); //simplest definition, default state off
+    espalexa.addDevice("Color Light", RGB_Led_Set);
     espalexa.begin();
     
   } else
@@ -47,13 +60,6 @@ void setup() {
 void loop() {
   espalexa.loop();
   delay(1);
-}
-
-void firstLightChanged(uint8_t brightness)
-{
-  Serial.println(brightness);
-  //Control the device
-  myLED.CommandeManuelle(brightness);
 }
 
 boolean connectWifi(){

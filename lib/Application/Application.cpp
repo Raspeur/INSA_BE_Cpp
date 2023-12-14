@@ -1,12 +1,23 @@
 #include <iostream>
 #include <Arduino.h>
+#include <ChainableLED.h>
 
 using namespace std;
 // prototypes
+enum t_colors
+{
+  green = 0,
+  red,
+  yellow,
+  blue,
+  purple,
+  white
+};
+
 
 class DispositifDomotique {
 public:
-        DispositifDomotique(const string& _nom) : nom(_nom), allume(false) {}
+    DispositifDomotique(const string& _nom) : nom(_nom), allume(false) {}
 
     virtual void allumer() {
         cout << nom.c_str();
@@ -24,44 +35,93 @@ public:
         return allume;
     }
 
-    //virtual void traiterCommandeVocale(const string& commande) = 0;
-
 protected:
-string nom;
+    string nom;
     bool allume;
 };
 
 class Lumiere : public DispositifDomotique{
-private:
-    int pinLed;
 public:
-    Lumiere(const string& nom, int pin) : DispositifDomotique(nom)
-    {
-        
-    }
+    Lumiere(const string& nom) : DispositifDomotique(nom){}
+    virtual void CommandeAlexa(uint8_t brigtness){}
+};
+class Single_Led: public Lumiere{
+    private:
+        const int pin;
+    public:
+      Single_Led(const string& nom, const int pinLed) : Lumiere(nom), pin(pinLed)
+      {
+        pinMode(pin, OUTPUT);
+      }
+        virtual void allumer()
+        {
+            digitalWrite(pin, (!true));
+            allume = true;
+        }
 
-    virtual void allumer()
-    {
-        digitalWrite(pinLed, (!true));
-        allume = true;
-    }
-    virtual void eteindre()
-    {
-        digitalWrite(pinLed, (!false));
-        allume = false;
-    }
+        virtual void eteindre()
+        {
+            digitalWrite(pin, (!false));
+            allume = false;
+        }
 
-    void setPinLed(int pin)
-    {
-        pinLed = pin;
-        pinMode(pinLed, OUTPUT);
-    }
+        virtual void CommandeAlexa(uint8_t etat_led)
+        {
+          if(etat_led!=0)
+              allumer();
+          else
+              eteindre();
+        }
+};
+class Ch_LED_RGB: public Lumiere{
+private:
+  const u_int8_t pin, pin_clk;
+  t_colors color;
+  int Red, Blue, Green;
+  ChainableLED Led;
 
-    void CommandeManuelle(uint8_t etat_led)
+public:
+  Ch_LED_RGB(const string& nom, const u_int8_t new_pin, const u_int8_t pin_clk) : Lumiere(nom), pin(new_pin), pin_clk(pin_clk), Led(pin, pin_clk, 1) {
+    setRGB(255, 255, 255);
+  }
+  virtual void CommandeAlexa(uint8_t etat_led)
+  {
+    if(etat_led!=0)
+        allumer();
+    else
+        eteindre();
+  }
+  virtual void eteindre()
+  {
+    setRGB(0, 0, 0);
+    allume = false;
+  }
+  virtual void allumer()
+  {
+    setRGB(Red, Blue, Green);
+    allume = false;
+  }
+  void setRGB(int colorR, int colorG, int colorB) {
+    Red=colorR;
+    Blue=colorB;
+    Green = colorG;
+    Led.setColorRGB(0, colorR, colorG, colorB);
+  }
+  void setcolor(t_colors new_color)
+  {
+    color = new_color;
+    switch(color)
     {
-        if(etat_led!=0)
-            allumer();
-        else
-            eteindre();
+      case(green) :  setRGB(0, 255, 0);  break;
+      case(red) :  setRGB(255, 0, 0);  break;
+      case(yellow) :  setRGB(255, 255, 0);  break;
+      case(blue) :  setRGB(0, 0, 255);  break;
+      case(purple) :  setRGB(128, 0, 128);  break;
+      case(white) : setRGB(255, 255, 255);  break;
+      default :  setRGB(255, 255, 255);  break;
     }
+  }
+  int getPin() const {
+    return pin;
+  }
 };
