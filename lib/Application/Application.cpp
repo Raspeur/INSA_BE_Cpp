@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Arduino.h>
 #include <ChainableLED.h>
+#include <Servo.h>
 
 using namespace std;
 // prototypes
@@ -124,4 +125,37 @@ public:
   int getPin() const {
     return pin;
   }
+};
+
+class Porte : public DispositifDomotique{
+    private:
+    int pinPorte;
+    Servo myservo;
+    public:
+        Porte(const string& nom, int pin) : DispositifDomotique(nom)
+    {
+        
+    }
+
+    virtual void ouvrir()
+    {
+        myservo.write(90);
+    }
+    virtual void fermer()
+    {
+        myservo.write(0);
+    }
+
+    void setPinPorte(int pin)
+    {
+        myservo.attach(pin);
+    }
+
+    void CommandeManuelle(bool etat_porte)
+    {
+        if(etat_porte)
+            ouvrir();
+        else
+            fermer();
+    }
 };
