@@ -7,32 +7,54 @@
 Lumiere myLED("led");
 bool wifiConnected = false;
 bool connectWifi();
+Espalexa espalexa;
+EspalexaDevice* device;
 
 // Change this!!
 const char* ssid = "Redmi Note 10 Pro";
 const char* password = "totototo";
 
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  pinMode(LED, OUTPUT);
-
+  myLED.setPinLed(LED);
   // Initialise wifi connection
   wifiConnected = connectWifi();
+
+  if(wifiConnected){
+    
+    //myLED.firstLightChanged();
+    // Define your devices here. 
+    device = new EspalexaDevice("Light 1", myLED.firstLightChanged); 
+    espalexa.addDevice(device); //simplest definition, default state off
+
+    espalexa.begin();
+    
+  } else
+  {
+    while (1) {
+      cout <<"Cannot connect to WiFi. Please check data and reset the ESP.";
+      delay(2500);
+    }
+  }
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  if (wifiConnected)
-  {
-    Serial.println("LED is on");
-  }
-  digitalWrite(LED, HIGH);
-  Serial.println("LED is on");
-  delay(1000);
-  digitalWrite(LED, LOW);
-  Serial.println("LED is off");
-  delay(1000);
+  // if (wifiConnected)
+  // {
+  //   Serial.println("LED is on");
+  // }
+  // myLED.allumer();
+  // Serial.println("LED is on");
+  // delay(1000);
+  // myLED.eteindre();
+  // Serial.println("LED is off");
+  // delay(1000);
+
+  espalexa.loop();
+  delay(1);
 }
 
 boolean connectWifi(){
