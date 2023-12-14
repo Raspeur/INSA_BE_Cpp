@@ -7,12 +7,11 @@
 #define LED 2
 
 Single_Led myLED("led", LED);
-Ch_LED_RGB RGBLed("LedRGB1", D7, D8);
+Ch_LED_RGB RGBLed("LedRGB1", D1, D2);
 
 bool wifiConnected = false;
 bool connectWifi();
 Espalexa espalexa;
-EspalexaDevice* device;
 
 // Change this!!
 const char* ssid = "Redmi Note 10 Pro";
@@ -44,7 +43,7 @@ void setup() {
 
   if(wifiConnected){
     // Define your devices here. 
-    device = new EspalexaDevice("Lampe 1", Single_Led_Set); espalexa.addDevice(device); //simplest definition, default state off
+    espalexa.addDevice("Lampe 1", Single_Led_Set); //simplest definition, default state off
     espalexa.addDevice("Color Light", RGB_Led_Set);
     espalexa.begin();
     
