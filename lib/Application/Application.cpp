@@ -1,5 +1,6 @@
 #include <iostream>
 #include <Arduino.h>
+#include <Servo.h>
 using namespace std;
 // prototypes
 
@@ -25,42 +26,37 @@ public:
         return allume;
     }
 
-    virtual void traiterCommandeVocale(const string& commande) = 0;
+    //virtual void traiterCommandeVocale(const string& commande) = 0;
 
 protected:
     string nom;
     bool allume;
 };
 
-class Lumiere : public DispositifDomotique {
+class Lumiere : public DispositifDomotique{
     private:
     int pinLed;
     public:
-        Lumiere(const string& nom) : DispositifDomotique(nom) {}
+        Lumiere(const string& nom, int pin) : DispositifDomotique(nom)
+    {
+        
+    }
 
     virtual void allumer()
     {
-        digitalWrite(pinLed, 1);
+        digitalWrite(pinLed, (!true));
+        allume = true;
     }
     virtual void eteindre()
     {
-        digitalWrite(pinLed, 0);
+        digitalWrite(pinLed, (!false));
+        allume = false;
     }
 
     void setPinLed(int pin)
     {
         pinLed = pin;
-        pinMode(pin, OUTPUT);
-    }
-
-    void traiterCommandeVocale(const string& commande) {
-        if (commande == "allume la lumière") {
-            allumer();
-        } else if (commande == "éteins la lumière") {
-            eteindre();
-        } else {
-            cout << "Commande vocale non compatible pour la lumière." << endl;
-        }
+        pinMode(pinLed, OUTPUT);
     }
 
     void CommandeManuelle(bool etat_led)
@@ -70,10 +66,37 @@ class Lumiere : public DispositifDomotique {
         else
             eteindre();
     }
+};
 
-    
-    static void firstLightChanged(uint8_t newBrightness) {
-        cout<<"Nouvelle luminosité : ";
-        cout<<newBrightness;
+class Porte : public DispositifDomotique{
+    private:
+    int pinPorte;
+    Servo myservo;
+    public:
+        Porte(const string& nom, int pin) : DispositifDomotique(nom)
+    {
+        
+    }
+
+    virtual void ouvrir()
+    {
+        myservo.write(90);
+    }
+    virtual void fermer()
+    {
+        myservo.write(0);
+    }
+
+    void setPinPorte(int pin)
+    {
+        myservo.attach(pin);
+    }
+
+    void CommandeManuelle(bool etat_porte)
+    {
+        if(etat_porte)
+            ouvrir();
+        else
+            fermer();
     }
 };
