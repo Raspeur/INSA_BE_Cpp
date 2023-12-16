@@ -4,19 +4,18 @@ Ce projet a été réalisé dans le cadre de nos cours de C++ avec pour objectif
 
 ## Description du Projet
 
-Notre équipe a choisi de concevoir un module connecté compatible avec Alexa pour la gestion automatisée d'une maison. Ce module offre des fonctionnalités telles que l'allumage des lumières, l'ouverture des volets roulants en fonction de plusieurs paramètres tels que la luminosité ambiante de la pièce, l'heure actuelle et les conditions météorologiques.
+Notre équipe a choisi de concevoir un module connecté compatible avec Alexa pour la gestion automatisée d'une maison. Ce module offre des fonctionnalités telles que l'allumage des lumières et leur couleurs, l'ouverture des portes en fonction de plusieurs paramètres tels que la luminosité ambiante de la pièce.
 
 ## Fonctionnalités Principales
 
 - **Contrôle de la Lumière:** L'ESP8266 est configuré pour allumer/éteindre les lumières de manière automatique ou à la demande via des commandes vocales avec Alexa.
-- **Gestion des Volets Roulants:** En se basant sur des capteurs de luminosité, l'heure du jour et les données météorologiques, le système peut ouvrir ou fermer les volets roulants pour maintenir un équilibre entre la lumière naturelle et artificielle.
+- **Gestion des portes:** En se basant sur des capteurs de luminosité, le système peut ouvrir ou fermer les portes pour faciliter les déplacements.
 - **Intégration avec Alexa:** L'interaction avec Alexa permet un contrôle vocal simple et efficace de tous les dispositifs connectés dans la maison.
 
 ## Configuration Requise
 
-- **Matériel:** ESP8266, capteurs de luminosité, relais pour le contrôle des lumières et des volets roulants.
+- **Matériel:** ESP8266, lumières RGB, servo moteurs pour les portes.
 - **Logiciels:** Arduino IDE pour la programmation de l'ESP8266 en langage C++.
-- **Accès Internet:** Nécessaire pour récupérer les données météorologiques.
 
 ## Configuration du Projet
 
