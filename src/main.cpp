@@ -43,8 +43,10 @@ void firstDoorChanged(EspalexaDevice* d)
   if (d->getValue()){
     Serial.println("ON");
     myDOOR.CommandeManuelle(1);
+    RGBLed=green;
   }
   else {
+    RGBLed=red;
     Serial.println("OFF");
     myDOOR.CommandeManuelle(0);
   }
@@ -52,7 +54,6 @@ void firstDoorChanged(EspalexaDevice* d)
 
 }
 void setup() {
-  myDOOR.setPinPorte(DOOR);
   // put your setup code here, to run once:
   Serial.begin(115200);
   // Initialise wifi connection

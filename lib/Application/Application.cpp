@@ -85,6 +85,10 @@ public:
   Ch_LED_RGB(const string& nom, const u_int8_t new_pin, const u_int8_t pin_clk) : Lumiere(nom), pin(new_pin), pin_clk(pin_clk), Led(pin, pin_clk, 1) {
     setRGB(255, 255, 255);
   }
+  Ch_LED_RGB& operator=(t_colors new_color) {
+    this->setcolor(new_color);
+    return *this;
+  }
   virtual void CommandeAlexa(uint8_t etat_led)
   {
     if(etat_led!=0)
@@ -129,13 +133,10 @@ public:
 
 class Porte : public DispositifDomotique{
     private:
-    int pinPorte;
+    const int pinPorte;
     Servo myservo;
     public:
-        Porte(const string& nom, int pin) : DispositifDomotique(nom)
-    {
-        
-    }
+    Porte(const string& nom, const int pinPorte) : pinPorte(pinPorte), DispositifDomotique(nom){}
 
     virtual void ouvrir()
     {
