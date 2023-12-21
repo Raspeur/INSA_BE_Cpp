@@ -4,162 +4,194 @@
 #include <Servo.h>
 
 using namespace std;
-// prototypes
-enum t_colors
+
+// Enum for colors
+enum Colors
 {
-  green = 0,
-  red,
-  yellow,
-  blue,
-  purple,
-  white
+  Green = 0,
+  Red,
+  Yellow,
+  Blue,
+  Purple,
+  White
 };
 
-
-class DispositifDomotique {
+// Base class for all home automation devices
+class HomeDevice {
 public:
-    DispositifDomotique(const string& _nom) : nom(_nom), allume(false) {}
+    HomeDevice(const string& _name) : name(_name), isOn(false) {}
 
-    virtual void allumer() {
-        cout << nom.c_str();
-        cout << "Allumé.";
-        allume = true;
+    // Turn on the device
+    virtual void turnOn() {
+        cout << name.c_str();
+        cout << " is on.";
+        isOn = true;
     }
 
-    virtual void eteindre() {
-        cout << nom.c_str();
-        cout << "Éteint.";
-        allume = false;
+    // Turn off the device
+    virtual void turnOff() {
+        cout << name.c_str();
+        cout << " is off.";
+        isOn = false;
     }
 
-    bool estAllume() const {
-        return allume;
+    // Check if the device is on
+    bool isDeviceOn() const {
+        return isOn;
     }
 
 protected:
-    string nom;
-    bool allume;
+    string name;
+    bool isOn;
 };
 
-class Lumiere : public DispositifDomotique{
+// Class for light devices
+class Light : public HomeDevice{
 public:
-    Lumiere(const string& nom) : DispositifDomotique(nom){}
-    virtual void CommandeAlexa(uint8_t brigtness){}
+    Light(const string& name) : HomeDevice(name){}
+    virtual void alexaCommand(uint8_t brightness){}
 };
-class Single_Led: public Lumiere{
+
+// Class for single LED light
+class SingleLed: public Light{
     private:
         const int pin;
     public:
-      Single_Led(const string& nom, const int pinLed) : Lumiere(nom), pin(pinLed)
+      SingleLed(const string& name, const int ledPin) : Light(name), pin(ledPin)
       {
         pinMode(pin, OUTPUT);
       }
-        virtual void allumer()
+
+        // Override turnOn method for single LED
+        virtual void turnOn()
         {
-            digitalWrite(pin, (!true));
-            allume = true;
+            digitalWrite(pin, HIGH);
+            isOn = true;
         }
 
-        virtual void eteindre()
+        // Override turnOff method for single LED
+        virtual void turnOff()
         {
-            digitalWrite(pin, (!false));
-            allume = false;
+            digitalWrite(pin, LOW);
+            isOn = false;
         }
 
-        virtual void CommandeAlexa(uint8_t etat_led)
+        // Handle Alexa command for single LED
+        virtual void alexaCommand(uint8_t ledState)
         {
-          if(etat_led!=0)
-              allumer();
+          if(ledState != 0)
+              turnOn();
           else
-              eteindre();
+              turnOff();
         }
 };
-class Ch_LED_RGB: public Lumiere{
+
+// Class for RGB LED light
+class RGBLed: public Light{
 private:
-  const u_int8_t pin, pin_clk;
-  t_colors color;
-  int Red, Blue, Green;
+  const uint8_t pin, clockPin;
+  Colors color;
+  int R, B, G;
   ChainableLED Led;
 
 public:
-  Ch_LED_RGB(const string& nom, const u_int8_t new_pin, const u_int8_t pin_clk) : Lumiere(nom), pin(new_pin), pin_clk(pin_clk), Led(pin, pin_clk, 1) {
+  RGBLed(const string& name, const uint8_t newPin, const uint8_t clockPin) : Light(name), pin(newPin), clockPin(clockPin), Led(pin, clockPin, 1) {
     setRGB(255, 255, 255);
   }
-  Ch_LED_RGB& operator=(t_colors new_color) {
-    this->setcolor(new_color);
+
+  // Set color for RGB LED
+  RGBLed& operator=(Colors newColor) {
+    this->setColor(newColor);
     return *this;
   }
-  virtual void CommandeAlexa(uint8_t etat_led)
+
+  // Handle Alexa command for RGB LED
+  virtual void alexaCommand(uint8_t ledState)
   {
-    if(etat_led!=0)
-        allumer();
+    if(ledState != 0)
+        turnOn();
     else
-        eteindre();
+        turnOff();
   }
-  virtual void eteindre()
+
+  // Override turnOff method for RGB LED
+  virtual void turnOff()
   {
     setRGB(0, 0, 0);
-    allume = false;
+    isOn = false;
   }
-  virtual void allumer()
+
+  // Override turnOn method for RGB LED
+  virtual void turnOn()
   {
-    setRGB(Red, Blue, Green);
-    allume = false;
+    setRGB(R, B, G);
+    isOn = true;
   }
+
+  // Set RGB color for RGB LED
   void setRGB(int colorR, int colorG, int colorB) {
-    Red=colorR;
-    Blue=colorB;
-    Green = colorG;
+    R = colorR;
+    B = colorB;
+    G = colorG;
     Led.setColorRGB(0, colorR, colorG, colorB);
   }
-  void setcolor(t_colors new_color)
+
+  // Set color for RGB LED
+  void setColor(Colors newColor)
   {
-    color = new_color;
+    color = newColor;
     switch(color)
     {
-      case(green) :  setRGB(0, 255, 0);  break;
-      case(red) :  setRGB(255, 0, 0);  break;
-      case(yellow) :  setRGB(255, 255, 0);  break;
-      case(blue) :  setRGB(0, 0, 255);  break;
-      case(purple) :  setRGB(128, 0, 128);  break;
-      case(white) : setRGB(255, 255, 255);  break;
-      default :  setRGB(255, 255, 255);  break;
+      case(Green) :  setRGB(0, 255, 0);  break;
+      case(Red) :  setRGB(255, 0, 0);  break;
+      case(Yellow) :  setRGB(255, 255, 0);  break;
+      case(Blue) :  setRGB(0, 0, 255);  break;
+      case(Purple) :  setRGB(128, 0, 128);  break;
+      case(White) : setRGB(255, 255, 255);  break;
+      default :  throw invalid_argument("Invalid color");  break;
     }
   }
+
   int getPin() const {
     return pin;
   }
 };
 
-class Porte : public DispositifDomotique{
+// Class for door
+class Door : public HomeDevice{
     private:
-    const int pinPorte;
+    const int doorPin;
     Servo myservo;
     public:
-    Porte(const string& nom, const int pinP) : DispositifDomotique(nom), pinPorte(pinP)
+    Door(const string& name, const int pinP) : HomeDevice(name), doorPin(pinP)
     {
-      setPinPorte(pinP);
+      setDoorPin(pinP);
     }
 
-    virtual void ouvrir()
+    // Open the door
+    virtual void open()
     {
         myservo.write(90);
     }
-    virtual void fermer()
+
+    // Close the door
+    virtual void close()
     {
         myservo.write(0);
     }
 
-    void setPinPorte(int pin)
+    // Set pin for the door
+    void setDoorPin(int pin)
     {
         myservo.attach(pin);
     }
 
-    void CommandeManuelle(bool etat_porte)
+    // Handle manual command for the door
+    void manualCommand(bool doorState)
     {
-        if(etat_porte)
-            ouvrir();
+        if(doorState)
+            open();
         else
-            fermer();
+            close();
     }
 };
