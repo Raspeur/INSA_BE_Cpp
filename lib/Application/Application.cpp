@@ -136,7 +136,10 @@ class Porte : public DispositifDomotique{
     const int pinPorte;
     Servo myservo;
     public:
-    Porte(const string& nom, const int pinPorte) : pinPorte(pinPorte), DispositifDomotique(nom){}
+    Porte(const string& nom, const int pinP) : DispositifDomotique(nom), pinPorte(pinP)
+    {
+      setPinPorte(pinP);
+    }
 
     virtual void ouvrir()
     {

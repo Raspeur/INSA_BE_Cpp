@@ -42,13 +42,13 @@ void firstDoorChanged(EspalexaDevice* d)
   Serial.print("A changed to ");
   if (d->getValue()){
     Serial.println("ON");
-    myDOOR.CommandeManuelle(1);
+    myDOOR.ouvrir();
     RGBLed=green;
   }
   else {
     RGBLed=red;
     Serial.println("OFF");
-    myDOOR.CommandeManuelle(0);
+    myDOOR.fermer();
   }
 
 
